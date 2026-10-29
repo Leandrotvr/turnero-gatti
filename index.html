@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Turnos · Lic. María Paula Gatti</title>
 <style>
-  :root{--bg:#f4f6fb;--card:#fff;--ink:#1d2433;--mute:#6b7488;--brand:#34454e;--brand-d:#222f36;--ok:#1a9d5c;--warn:#c77d00;--bad:#c0392b;--line:#e3e7f0}
+  :root{--bg:#f3f3f3;--card:#fff;--ink:#222222;--mute:#6e6e6e;--brand:#3a3a3c;--brand-d:#232324;--ok:#1a9d5c;--warn:#c77d00;--bad:#c0392b;--line:#e2e2e2}
   *{box-sizing:border-box}
   body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--ink)}
   .wrap{max-width:640px;margin:0 auto;padding:16px}
@@ -20,12 +20,12 @@
   .day{min-width:78px;text-align:center;flex:0 0 auto}
   .day.sel,.slot.sel{background:var(--brand);color:#fff;border-color:var(--brand)}
   .slots{display:grid;grid-template-columns:repeat(auto-fill,minmax(88px,1fr));gap:8px;margin-top:6px}
-  .slot:disabled{background:#f0f1f5;color:#aab;cursor:not-allowed;text-decoration:line-through}
+  .slot:disabled{background:#efefef;color:#aaa;cursor:not-allowed;text-decoration:line-through}
   label{display:block;font-size:13px;color:var(--mute);margin:12px 0 4px}
   input{width:100%;padding:11px;border:1px solid var(--line);border-radius:10px;font-size:15px}
   button.primary{background:var(--brand);color:#fff;border:0;border-radius:10px;padding:13px 16px;font-size:15px;font-weight:600;cursor:pointer;width:100%;margin-top:14px}
   button.primary:hover{background:var(--brand-d)}
-  button.primary:disabled{background:#b8c4d0;cursor:not-allowed}
+  button.primary:disabled{background:#bdbdbd;cursor:not-allowed}
   button.ghost{background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 14px;font-size:14px;cursor:pointer}
   .row{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px solid var(--line);font-size:14px}
   .row:last-child{border:0}
@@ -38,10 +38,10 @@
   .tag.inf{background:#fff4e0;color:var(--warn)}
   .tag.ok{background:#e6f6ee;color:var(--ok)}
   .tag.bad{background:#fdecea;color:var(--bad)}
-  .tag.gr{background:#eceef3;color:var(--mute)}
+  .tag.gr{background:#ececec;color:var(--mute)}
   .small{font-size:12px;color:var(--mute)}
   .acts{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
-  .spin{display:inline-block;width:16px;height:16px;border:3px solid #d5dde1;border-top-color:var(--brand);border-radius:50%;animation:g 1s linear infinite;vertical-align:-3px;margin-right:8px}
+  .spin{display:inline-block;width:16px;height:16px;border:3px solid #d8d8d8;border-top-color:var(--brand);border-radius:50%;animation:g 1s linear infinite;vertical-align:-3px;margin-right:8px}
   @keyframes g{to{transform:rotate(360deg)}}
   canvas{max-width:100%;height:auto;border:1px solid var(--line);border-radius:10px}
 </style>
@@ -63,8 +63,8 @@ const CONFIG = {
   monto: 45000,                    // solo para mostrar; el importe real lo define la Edge Function crear-pago
   moneda: "$",
   duracionMin: 45,
-  horaInicio: 9,
-  horaFin: 17,
+  horaInicio: 14.5,                // 14:30
+  horaFin: 19.75,                  // el último turno empieza 19:00 y termina 19:45
   diasHabiles: [1,2,3,4,5],        // 0=dom ... 6=sáb
   diasAdelante: 14,                // cuántos días hábiles hacia adelante se puede reservar
   retencionMin: 15                 // minutos que se guarda el horario mientras se paga (igual que en la función)
@@ -433,9 +433,9 @@ function dibujarComprobante(cv, b) {
   ctx.fillStyle = "#fff"; ctx.fillRect(0,0,W,H);
   if (LOGO.complete && LOGO.naturalWidth) { const lw = 400, lh = lw * LOGO.naturalHeight / LOGO.naturalWidth; ctx.drawImage(LOGO, (W-lw)/2, 24, lw, lh); }
   else { LOGO.addEventListener("load", () => dibujarComprobante(cv, b), { once: true });
-         ctx.fillStyle = "#1d2433"; ctx.textAlign = "center"; ctx.font = "bold 40px system-ui, sans-serif"; ctx.fillText(CONFIG.negocio, W/2, 100); }
-  ctx.fillStyle = "#34454e"; ctx.fillRect(0,192,W,6);
-  ctx.fillStyle = "#6b7488"; ctx.textAlign = "center"; ctx.font = "26px system-ui, sans-serif";
+         ctx.fillStyle = "#222222"; ctx.textAlign = "center"; ctx.font = "bold 40px system-ui, sans-serif"; ctx.fillText(CONFIG.negocio, W/2, 100); }
+  ctx.fillStyle = "#3a3a3c"; ctx.fillRect(0,192,W,6);
+  ctx.fillStyle = "#6e6e6e"; ctx.textAlign = "center"; ctx.font = "26px system-ui, sans-serif";
   ctx.fillText("Comprobante de turno", W/2, 242);
 
   ctx.fillStyle = color; ctx.font = "bold 30px system-ui, sans-serif";
@@ -450,16 +450,16 @@ function dibujarComprobante(cv, b) {
   ];
   let y = 356;
   filas.forEach(([k,v]) => {
-    ctx.textAlign = "left"; ctx.fillStyle = "#6b7488"; ctx.font = "24px system-ui, sans-serif"; ctx.fillText(k, 60, y);
-    ctx.textAlign = "right"; ctx.fillStyle = "#1d2433"; ctx.font = "bold 26px system-ui, sans-serif";
+    ctx.textAlign = "left"; ctx.fillStyle = "#6e6e6e"; ctx.font = "24px system-ui, sans-serif"; ctx.fillText(k, 60, y);
+    ctx.textAlign = "right"; ctx.fillStyle = "#222222"; ctx.font = "bold 26px system-ui, sans-serif";
     let t = String(v); while (ctx.measureText(t).width > 470 && t.length > 4) t = t.slice(0,-2);
     if (t !== String(v)) t += "…";
     ctx.fillText(t, W-60, y);
-    ctx.strokeStyle = "#e3e7f0"; ctx.beginPath(); ctx.moveTo(60, y+20); ctx.lineTo(W-60, y+20); ctx.stroke();
+    ctx.strokeStyle = "#e2e2e2"; ctx.beginPath(); ctx.moveTo(60, y+20); ctx.lineTo(W-60, y+20); ctx.stroke();
     y += 64;
   });
 
-  ctx.textAlign = "center"; ctx.fillStyle = "#6b7488"; ctx.font = "20px system-ui, sans-serif";
+  ctx.textAlign = "center"; ctx.fillStyle = "#6e6e6e"; ctx.font = "20px system-ui, sans-serif";
   ctx.fillText("Presentá este comprobante el día del turno.", W/2, 920);
   if (demo) ctx.fillText("Comprobante de demostración: no corresponde a un pago real.", W/2, 952);
 }
